@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0f1117" />
+    <meta name="description" content="CivicAlert — Citizen Traffic Violation Reporting System" />
+    <title>CivicAlert</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              brand: { DEFAULT: '#F5C842', dark: '#E8A020', dim: 'rgba(245,200,66,0.12)' },
+              surface: { DEFAULT: '#13161E', 2: '#1A1E2A', 3: '#222736' },
+              base: '#0B0D11',
+            },
+            fontFamily: {
+              head: ['Syne', 'sans-serif'],
+              body: ['DM Sans', 'sans-serif'],
+            },
+          },
+        },
+      };
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+    <style>
+      body { background: #0B0D11; color: #F0F2F8; font-family: 'DM Sans', sans-serif; }
+      ::-webkit-scrollbar { width: 5px; }
+      ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+      ::placeholder { color: #5A6176; }
+      @keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+      @keyframes spin { to { transform: rotate(360deg); } }
+      .fade-up { animation: fadeUp 0.35s ease forwards; }
+      .spinner { animation: spin 0.7s linear infinite; }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
