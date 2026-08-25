@@ -1,11 +1,13 @@
-// Backend/server.js
+// ================================
+// Backend Server
+// ================================
 
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const session = require('express-session');
 
-const { syncDB } = require('./config/db');
+const { syncDb } = require('./config/db');
 
 const authRoutes = require('./routes/authRoutes');
 const reportRoutes = require('./routes/reportRoutes');
@@ -16,251 +18,200 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 
-// ===============================
+// ================================
 // CORS CONFIGURATION
-// ===============================
+// ================================
 
 const allowedOrigins = [
-  'http://localhost:3000',
-  'https://traffic-violation-reporting.vercel.app'
+    'http://localhost:3000',
+    'https://traffic-violation-reporting.vercel.app'
 ];
 
 app.use(cors({
-  origin: function (origin, callback) {
+    origin: function (origin, callback) {
 
-    // Allow requests without origin
-    // (Postman, server-to-server requests, etc.)
-    if (!origin) {
-      return callback(null, true);
-    }
+        // Allow requests with no origin
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            console.log('Blocked by CORS:', origin);
+            callback(new Error('Not allowed by CORS'));
+        }
 
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    }
+    },
 
-    console.log('Blocked by CORS:', origin);
+    credentials: true,
 
-    return callback(
-      new Error('Not allowed by CORS')
-    );
-  },
+    methods: [
+        'GET',
+        'POST',
+        'PUT',
+        'DELETE',
+        'PATCH',
+        'OPTIONS'
+    ],
 
-  credentials: true,
-
-  methods: [
-    'GET',
-    'POST',
-    'PUT',
-    'DELETE',
-    'PATCH',
-    'OPTIONS'
-  ],
-
-  allowedHeaders: [
-    'Content-Type',
-    'Authorization'
-  ]
+    allowedHeaders: [
+        'Content-Type',
+        'Authorization'
+    ]
 }));
 
 
-// ===============================
+// ================================
 // BODY PARSING
-// ===============================
+// ================================
 
 app.use(express.json({
-  limit: '10mb'
+    limit: '10mb'
 }));
 
 app.use(express.urlencoded({
-  extended: true,
-  limit: '10mb'
+    extended: true,
+    limit: '10mb'
 }));
 
 
-// ===============================
+// ================================
 // RATE LIMITING
-// ===============================
+// ================================
 
 const rateLimit = require('express-rate-limit');
 
 const reportLimiter = rateLimit({
-  windowMs: 10 * 60 * 1000,
-
-  max: 50,
-
-  message: {
-    error: 'Too many submissions. Please wait 10 minutes.'
-  },
-
-  standardHeaders: true,
-
-  legacyHeaders: false
+    windowMs: 10 * 60 * 1000,
+    max: 50,
+    message: {
+        error: 'Too many submissions. Please wait 10 minutes.'
+    },
+    standardHeaders: true,
+    legacyHeaders: false
 });
 
 app.use('/report', reportLimiter);
 
 
-// ===============================
-// SESSION CONFIGURATION
-// ===============================
+// ================================
+// SESSION
+// ================================
 
 app.use(session({
 
-  secret:
-    process.env.SESSION_SECRET ||
-    'civialert_dev_secret',
+    secret:
+        process.env.SESSION_SECRET ||
+        'civialert_dev_secret',
 
-  resave: false,
+    resave: false,
 
-  saveUninitialized: false,
+    saveUninitialized: false,
 
-  cookie: {
-
-    secure: true,
-
-    httpOnly: true,
-
-    maxAge:
-      7 * 24 * 60 * 60 * 1000,
-
-    sameSite: 'none'
-  }
+    cookie: {
+        secure: false,
+        httpOnly: true,
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+        sameSite: 'lax'
+    }
 
 }));
 
 
-// ===============================
+// ================================
 // STATIC UPLOADS
-// ===============================
+// ================================
 
 app.use(
-  '/uploads',
-  express.static(
-    path.join(__dirname, 'uploads')
-  )
+    '/uploads',
+    express.static(
+        path.join(__dirname, 'uploads')
+    )
 );
 
 
-// ===============================
-// API ROUTES
-// ===============================
+// ================================
+// ROUTES
+// ================================
 
 app.use('/auth', authRoutes);
 
 app.use('/report', reportRoutes);
 
-app.use('/report', verifyRoutes);
+app.use('/verify', verifyRoutes);
 
 
-// ===============================
+// ================================
 // HEALTH CHECK
-// ===============================
+// ================================
 
 app.get('/health', (req, res) => {
 
-  res.json({
-    status: 'ok',
-    timestamp: new Date().toISOString()
-  });
+    res.json({
+        status: 'ok',
+        timestamp: new Date().toISOString()
+    });
 
 });
 
 
-// ===============================
+// ================================
 // ROOT ROUTE
-// ===============================
+// ================================
 
 app.get('/', (req, res) => {
 
-  res.send('🚦 CivicAlert Backend is running 🚀');
+    res.send('CivicAlert Backend is running 🚀');
 
 });
 
 
-// ===============================
+// ================================
 // GLOBAL ERROR HANDLER
-// ===============================
+// ================================
 
 app.use((err, req, res, next) => {
 
-  console.error('Server error:', err);
+    console.error(err.stack);
 
-  // File too large
-  if (
-    err.message &&
-    err.message.includes('File too large')
-  ) {
+    if (
+        err instanceof SyntaxError &&
+        err.status === 400 &&
+        'body' in err
+    ) {
 
-    return res.status(400).json({
+        return res.status(400).json({
+            error: 'Invalid JSON format'
+        });
 
-      error:
-        `File too large. Max ${
-          process.env.MAX_FILE_SIZE_MB || 10
-        }MB allowed.`
+    }
 
+    res.status(500).json({
+        error:
+            err.message ||
+            'Internal server error'
     });
-
-  }
-
-  // CORS error
-  if (err.message === 'Not allowed by CORS') {
-
-    return res.status(403).json({
-      error: 'Request blocked by CORS'
-    });
-
-  }
-
-  res.status(500).json({
-
-    error:
-      err.message ||
-      'Internal server error'
-
-  });
 
 });
 
 
-// ===============================
+// ================================
 // START SERVER
-// ===============================
+// ================================
 
 async function start() {
 
-  try {
-
-    await syncDB();
+    await syncDb();
 
     app.listen(PORT, () => {
 
-      console.log(
-        `🚀 CivicAlert API running at port ${PORT}`
-      );
+        console.log(
+            `🚀 CivicAlert API running at http://localhost:${PORT}`
+        );
 
-      console.log(
-        `📁 Uploads served at http://localhost:${PORT}/uploads`
-      );
-
-      console.log(
-        '🌐 Allowed frontend origins:'
-      );
-
-      console.log(allowedOrigins);
+        console.log(
+            `📁 Uploads served at http://localhost:${PORT}/uploads`
+        );
 
     });
 
-  } catch (error) {
-
-    console.error(
-      'Failed to start server:',
-      error
-    );
-
-    process.exit(1);
-
-  }
-
 }
 
-start();c
+start();
