@@ -10,28 +10,48 @@ const session = require('express-session');
 const { syncDb } = require('./config/db');
 
 const authRoutes = require('./routes/authRoutes');
-const reportRoutes = require('./routes/reportRoutes');
+const reportRoutes = require('./routes/reportsRoutes');
 const verifyRoutes = require('./routes/verifyRoutes');
 
 const app = express();
 
 const PORT = process.env.PORT || 5000;
+const isProduction = process.env.NODE_ENV === 'production';
 
 
 // ================================
 // CORS CONFIGURATION
 // ================================
 
-const allowedOrigins = [
+const configuredOrigins = (process.env.FRONTEND_URLS || '')
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+
+const allowedOrigins = new Set([
     'http://localhost:3000',
     'https://traffic-violation-reporting.vercel.app'
-];
+]);
+
+configuredOrigins.forEach((origin) => allowedOrigins.add(origin));
+
+function isAllowedOrigin(origin) {
+    if (!origin) return true;
+    if (allowedOrigins.has(origin)) return true;
+
+    try {
+        const { hostname, protocol } = new URL(origin);
+        return protocol === 'https:' && hostname.endsWith('.vercel.app');
+    } catch {
+        return false;
+    }
+}
 
 app.use(cors({
     origin: function (origin, callback) {
 
         // Allow requests with no origin
-        if (!origin || allowedOrigins.includes(origin)) {
+        if (isAllowedOrigin(origin)) {
             callback(null, true);
         } else {
             console.log('Blocked by CORS:', origin);
@@ -95,6 +115,10 @@ app.use('/report', reportLimiter);
 // SESSION
 // ================================
 
+if (isProduction) {
+    app.set('trust proxy', 1);
+}
+
 app.use(session({
 
     secret:
@@ -106,10 +130,10 @@ app.use(session({
     saveUninitialized: false,
 
     cookie: {
-        secure: false,
+        secure: isProduction,
         httpOnly: true,
         maxAge: 7 * 24 * 60 * 60 * 1000,
-        sameSite: 'lax'
+        sameSite: isProduction ? 'none' : 'lax'
     }
 
 }));
@@ -134,7 +158,6 @@ app.use(
 app.use('/auth', authRoutes);
 
 app.use('/report', reportRoutes);
-
 app.use('/verify', verifyRoutes);
 
 

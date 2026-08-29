@@ -30,6 +30,12 @@ Create `.env` (optional):
 REACT_APP_API_URL=http://localhost:5000
 ```
 
+For Vercel production, set `REACT_APP_API_URL` in Vercel Project Settings to your Render backend URL:
+
+```env
+REACT_APP_API_URL=https://your-service.onrender.com
+```
+
 ## Run in Development
 
 ```bash

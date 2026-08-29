@@ -1,8 +1,9 @@
 // src/components/ReportCard.jsx
 import React, { useState } from 'react';
 import { Badge, Btn } from './ui';
+import getApiBase from '../config/apiBase';
 
-const API = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+const API = getApiBase();
 
 const VIOLATION_ICONS = {
   'No Helmet': '⛑',
