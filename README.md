@@ -77,6 +77,8 @@ PORT=3000 npx react-scripts start
 - Frontend build is configured via `vercel.json`.
 - Build command: `npm run build --prefix frontend/frontend`
 - Build output: `frontend/frontend/build`
+- Set `REACT_APP_API_URL` in Vercel to your Render backend URL (for example, `https://your-service.onrender.com`).
+- Set `FRONTEND_URLS` in Render backend env to your Vercel domain(s), comma-separated.
 
 ## Additional Documentation
 
