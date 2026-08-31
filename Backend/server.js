@@ -161,8 +161,13 @@ app.use(
 
 app.use('/auth', authRoutes);
 
-app.use('/report', reportRoutes);
-app.use('/verify', verifyRoutes);
+// reportRoutes declares public paths such as /report, /reports and /admin/*.
+// Mount it at the root so those URLs match the React client exactly.
+app.use('/', reportRoutes);
+
+// AI verification endpoints are exposed as /report/submit and
+// /report/verify-image, matching the client API service.
+app.use('/report', verifyRoutes);
 
 
 // ================================
