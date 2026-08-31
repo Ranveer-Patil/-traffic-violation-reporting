@@ -18,6 +18,10 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const isProduction = process.env.NODE_ENV === 'production';
 
+// Render sits behind a reverse proxy. This lets secure session cookies work
+// correctly when the frontend is served from Vercel.
+if (isProduction) app.set('trust proxy', 1);
+
 
 // ================================
 // CORS CONFIGURATION
