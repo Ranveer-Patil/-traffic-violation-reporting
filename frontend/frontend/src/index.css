@@ -12,3 +12,45 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+:root { --gov-navy: #082b59; --gov-blue: #0d4d90; --gov-saffron: #f5a623; --gov-ink: #0b1f33; }
+.login-page { background: linear-gradient(135deg, #061a33 0%, #0b376a 52%, #071d38 100%) !important; position: relative; }
+.login-page::before { content: ''; position: fixed; inset: 0 0 auto; height: 5px; background: linear-gradient(90deg, #f5a623 0 33%, #fff 33% 66%, #138808 66%); }
+.login-card { box-shadow: 0 24px 70px rgba(0,0,0,.32); border-top: 3px solid var(--gov-saffron) !important; }
+
+.app-layout { display: flex; min-height: 100vh; }
+.app-main { flex: 1; overflow-y: auto; min-height: 100vh; }
+.sidebar { background: linear-gradient(180deg, #092e5c, #071d38) !important; border-right-color: rgba(255,255,255,.14) !important; }
+.sidebar-brand { border-bottom-color: rgba(255,255,255,.14) !important; position: relative; }
+.sidebar-brand::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--gov-saffron); }
+.sidebar-service-name { color: #a9bfd8; font-size: 10px; letter-spacing: .25px; margin-top: 8px; line-height: 1.35; }
+.page-container { padding: 2rem; max-width: 1100px; margin: 0 auto; }
+.page-heading { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: 1.5rem; }
+.page-heading h1 { font-family: Syne, sans-serif; font-size: 26px; margin-bottom: 4px; }
+.page-heading p, .map-note { color: #8b93a8; font-size: 14px; }
+.map-count { background: #13161e; border: 1px solid rgba(255,255,255,.1); border-radius: 8px; padding: 8px 12px; font-size: 13px; color: #8b93a8; white-space: nowrap; }
+.map-count span { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #3ecf8e; margin-right: 7px; }
+.map-filters, .map-legend { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+.map-filters select { background: #13161e; color: #f0f2f8; border: 1px solid rgba(255,255,255,.12); border-radius: 8px; padding: 10px 12px; font: inherit; font-size: 13px; }
+.map-legend button { background: #13161e; color: #8b93a8; border: 1px solid rgba(255,255,255,.08); border-radius: 20px; padding: 6px 9px; cursor: pointer; font: inherit; font-size: 12px; }
+.map-legend button.active { color: #f0f2f8; border-color: #f5c842; }
+.map-legend i { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 5px; }
+.map-shell { height: min(65vh, 620px); min-height: 380px; position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,.1); border-radius: 14px; background: #13161e; }
+.leaflet-map { height: 100%; width: 100%; }
+.map-loading, .map-empty { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 10px; color: #8b93a8; background: rgba(19,22,30,.82); z-index: 500; }
+.map-empty { pointer-events: none; background: rgba(19,22,30,.55); }
+.map-note { margin-top: 10px; font-size: 12px; }
+.violation-marker span { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); border: 2px solid white; box-shadow: 0 2px 8px rgba(0,0,0,.35); color: #0b0d11; font-weight: 800; }
+.violation-marker span::first-letter { transform: rotate(45deg); }
+@media (max-width: 760px) {
+  body { padding-bottom: calc(62px + env(safe-area-inset-bottom)); }
+  .sidebar { position: fixed !important; z-index: 1000; bottom: 0; top: auto !important; left: 0; width: 100% !important; height: calc(62px + env(safe-area-inset-bottom)) !important; border-top: 1px solid rgba(255,255,255,.12); border-right: 0 !important; flex-direction: row !important; background: rgba(19,22,30,.98) !important; }
+  .sidebar-brand, .sidebar-account { display: none !important; }
+  .sidebar-nav { padding: 5px 4px env(safe-area-inset-bottom) !important; width: 100%; flex-direction: row !important; justify-content: space-around; gap: 2px !important; }
+  .sidebar-nav button { flex: 1; padding: 6px 2px !important; flex-direction: column; justify-content: center; gap: 2px !important; border-left: 0 !important; font-size: 10px !important; text-align: center !important; }
+  .sidebar-nav button span { font-size: 16px !important; }
+  .page-container { padding: 1.25rem 1rem; }
+  .page-heading h1 { font-size: 23px; }
+  .map-filters select { flex: 1; min-width: 0; }
+  .map-shell { min-height: 360px; height: 58vh; }
+}

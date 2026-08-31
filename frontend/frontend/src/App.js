@@ -42,9 +42,9 @@ function FullscreenSpinner() {
 // ── Layout (sidebar + main content) ──────────────────────────────────────────
 function AppLayout({ children }) {
   return (
-    <div style={{ display: 'flex', minHeight: '100vh' }}>
+    <div className="app-layout">
       <Sidebar />
-      <main style={{ flex: 1, overflowY: 'auto', minHeight: '100vh' }}>
+      <main className="app-main">
         {children}
       </main>
     </div>

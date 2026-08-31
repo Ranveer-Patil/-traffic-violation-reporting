@@ -25,9 +25,9 @@ export default function Sidebar() {
   const nav = user?.role === 'admin' ? NAV_ADMIN : NAV_USER;
 
   return (
-    <aside style={{ width: 240, background: '#13161E', borderRight: '1px solid rgba(255,255,255,0.07)', display: 'flex', flexDirection: 'column', height: '100vh', position: 'sticky', top: 0, flexShrink: 0 }}>
+    <aside className="sidebar" style={{ width: 240, background: '#13161E', borderRight: '1px solid rgba(255,255,255,0.07)', display: 'flex', flexDirection: 'column', height: '100vh', position: 'sticky', top: 0, flexShrink: 0 }}>
       {/* Logo */}
-      <div style={{ padding: '1.5rem', borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
+      <div className="sidebar-brand" style={{ padding: '1.5rem', borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <div style={{ width: 9, height: 9, borderRadius: '50%', background: '#F5C842' }} />
           <span style={{ fontSize: 13, fontWeight: 800, fontFamily: 'Syne, sans-serif', color: '#F5C842', letterSpacing: 1.5 }}>CIVIC ALERT</span>
@@ -35,10 +35,11 @@ export default function Sidebar() {
         {user?.role === 'admin' && (
           <div style={{ marginTop: 6, fontSize: 11, color: '#5B8AF5', background: 'rgba(91,138,245,0.1)', borderRadius: 4, padding: '2px 8px', display: 'inline-block' }}>Administrator</div>
         )}
+        <div className="sidebar-service-name">Traffic Violation Reporting Service</div>
       </div>
 
       {/* Navigation */}
-      <nav style={{ flex: 1, padding: '1rem 0.75rem', display: 'flex', flexDirection: 'column', gap: 4 }}>
+      <nav className="sidebar-nav" style={{ flex: 1, padding: '1rem 0.75rem', display: 'flex', flexDirection: 'column', gap: 4 }}>
         {nav.map(item => {
           const active = pathname === item.path;
           return (
@@ -52,7 +53,7 @@ export default function Sidebar() {
       </nav>
 
       {/* User + Points */}
-      <div style={{ padding: '1rem', borderTop: '1px solid rgba(255,255,255,0.07)' }}>
+      <div className="sidebar-account" style={{ padding: '1rem', borderTop: '1px solid rgba(255,255,255,0.07)' }}>
         {user?.role !== 'admin' && (
           <div style={{ background: 'rgba(245,200,66,0.1)', borderRadius: 10, padding: '12px', marginBottom: 12, textAlign: 'center', border: '1px solid rgba(245,200,66,0.2)' }}>
             <div style={{ fontSize: 11, color: '#F5C842', fontWeight: 700, letterSpacing: 0.8, marginBottom: 4, fontFamily: 'Syne, sans-serif' }}>CIVIC POINTS</div>

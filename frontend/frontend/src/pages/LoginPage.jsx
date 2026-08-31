@@ -35,8 +35,8 @@ export default function LoginPage() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24, background: 'radial-gradient(ellipse at 20% 50%, rgba(245,200,66,0.05) 0%, transparent 60%), #0B0D11' }}>
-      <div className="fade-up" style={{ width: '100%', maxWidth: 420 }}>
+    <div className="login-page" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24, background: 'radial-gradient(ellipse at 20% 50%, rgba(245,200,66,0.05) 0%, transparent 60%), #0B0D11' }}>
+      <div className="login-panel fade-up" style={{ width: '100%', maxWidth: 420 }}>
         {/* Brand */}
         <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(245,200,66,0.1)', borderRadius: 50, padding: '8px 20px', marginBottom: 20, border: '1px solid rgba(245,200,66,0.2)' }}>
@@ -53,7 +53,7 @@ export default function LoginPage() {
         </div>
 
         {/* Login Card */}
-        <div style={{ background: '#13161E', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 20, padding: '2rem' }}>
+        <div className="login-card" style={{ background: '#13161E', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 20, padding: '2rem' }}>
           {error && (
             <div style={{ background: 'rgba(242,92,92,0.1)', border: '1px solid rgba(242,92,92,0.25)', borderRadius: 10, padding: '12px 16px', marginBottom: 20, fontSize: 14, color: '#F25C5C' }}>
               {error}
