@@ -42,7 +42,7 @@ body {
 .map-legend i { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 5px; }
 .map-shell { height: min(65vh, 620px); min-height: 380px; position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,.1); border-radius: 14px; background: #13161e; }
 .leaflet-map { height: 100%; width: 100%; }
-.map-loading, .map-empty { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 10px; color: #8b93a8; background: rgba(19,22,30,.82); z-index: 500; }
+.map-loading, .map-empty { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 10px; color: #8b93a8; background: rgba(19,22,30,.82); z-index: 500; pointer-events: none; }
 .map-empty { pointer-events: none; background: rgba(19,22,30,.55); }
 .map-note { margin-top: 10px; font-size: 12px; }
 .violation-marker span { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); border: 2px solid white; box-shadow: 0 2px 8px rgba(0,0,0,.35); color: #0b0d11; font-weight: 800; }

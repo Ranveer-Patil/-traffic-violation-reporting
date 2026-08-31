@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { getMyReports, getAdminReports } from '../services/api';
 import { Spinner } from '../components/ui';
@@ -18,15 +18,23 @@ export default function MapPage() {
   }, [user]);
   useEffect(() => { loadReports(); }, [loadReports]);
   useEffect(() => {
-    if (!window.L || !element.current || map.current) return undefined;
-    map.current = window.L.map(element.current, { zoomControl: false }).setView([20.5937, 78.9629], 5);
-    window.L.control.zoom({ position: 'bottomright' }).addTo(map.current);
-    window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap contributors' }).addTo(map.current);
-    markers.current = window.L.layerGroup().addTo(map.current);
-    return () => { map.current?.remove(); map.current = null; };
+    let retry; let resizeObserver;
+    const initialise = () => {
+      if (!element.current || map.current) return;
+      if (!window.L) { retry = window.setTimeout(initialise, 250); return; }
+      map.current = window.L.map(element.current, { zoomControl: false }).setView([20.5937, 78.9629], 5);
+      window.L.control.zoom({ position: 'bottomright' }).addTo(map.current);
+      window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap contributors' }).addTo(map.current);
+      markers.current = window.L.layerGroup().addTo(map.current);
+      window.requestAnimationFrame(() => map.current?.invalidateSize());
+      resizeObserver = new ResizeObserver(() => map.current?.invalidateSize());
+      resizeObserver.observe(element.current);
+    };
+    initialise();
+    return () => { window.clearTimeout(retry); resizeObserver?.disconnect(); map.current?.remove(); map.current = null; };
   }, []);
-  const located = reports.filter(r => Number.isFinite(Number(r.lat)) && Number.isFinite(Number(r.lng)));
-  const filtered = located.filter(r => (!type || r.violationType === type) && (!status || r.status === status));
+  const located = useMemo(() => reports.filter(r => Number.isFinite(Number(r.lat)) && Number.isFinite(Number(r.lng))), [reports]);
+  const filtered = useMemo(() => located.filter(r => (!type || r.violationType === type) && (!status || r.status === status)), [located, type, status]);
   useEffect(() => {
     if (!map.current || !markers.current || !window.L) return;
     markers.current.clearLayers(); const bounds = [];
