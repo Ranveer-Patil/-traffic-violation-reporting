@@ -64,7 +64,7 @@ function AppRoutes() {
 
       {/* User routes */}
       <Route path="/dashboard" element={<RequireAuth><AppLayout><DashboardPage /></AppLayout></RequireAuth>} />
-      <Route path="/report" element={<RequireAuth><ReportPage /></RequireAuth>} />
+      <Route path="/report" element={<RequireAuth><AppLayout><ReportPage /></AppLayout></RequireAuth>} />
       <Route path="/submit" element={<RequireAuth><AppLayout><SubmitPage /></AppLayout></RequireAuth>} />
       <Route path="/leaderboard" element={<RequireAuth><AppLayout><LeaderboardPage /></AppLayout></RequireAuth>} />
       <Route path="/map" element={<RequireAuth><AppLayout><MapPage /></AppLayout></RequireAuth>} />
