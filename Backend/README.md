@@ -37,6 +37,8 @@ GOOGLE_VISION_API_KEY=
 FRONTEND_URLS=http://localhost:3000,https://traffic-violation-reporting.vercel.app
 ```
 
+In development, requests from private-network frontend origins (for example `http://192.168.x.x:3000`) are also allowed to support mobile-device testing.
+
 For Render deployment, set `NODE_ENV=production` so secure cross-site session cookies are enabled.
 
 ## Run

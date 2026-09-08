@@ -40,10 +40,11 @@ REACT_APP_API_URL=https://your-service.onrender.com
 
 ```bash
 # Cross-platform option
-npx react-scripts start
+npm start
 ```
 
 The app runs at `http://localhost:3000` by default.
+For mobile testing on the same network, open `http://<your-computer-lan-ip>:3000`.
 
 ## Scripts
 

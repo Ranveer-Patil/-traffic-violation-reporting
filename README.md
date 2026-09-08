@@ -69,8 +69,10 @@ npm run dev --prefix Backend
 
 ```bash
 cd frontend/frontend
-PORT=3000 npx react-scripts start
+npm start
 ```
+
+For testing on a mobile phone on the same Wi-Fi, open `http://<your-computer-lan-ip>:3000`.
 
 ## Deployment
 
