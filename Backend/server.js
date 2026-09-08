@@ -39,12 +39,44 @@ const allowedOrigins = new Set([
 
 configuredOrigins.forEach((origin) => allowedOrigins.add(origin));
 
+function isPrivateNetworkHost(hostname) {
+    if (!hostname) return false;
+
+    if (
+        hostname === 'localhost' ||
+        hostname === '127.0.0.1' ||
+        hostname === '::1'
+    ) {
+        return true;
+    }
+
+    if (hostname.endsWith('.local')) return true;
+
+    const parts = hostname.split('.').map(Number);
+    if (
+        parts.length !== 4 ||
+        parts.some((part) => Number.isNaN(part) || part < 0 || part > 255)
+    ) {
+        return false;
+    }
+
+    const [a, b] = parts;
+    if (a === 10) return true;
+    if (a === 192 && b === 168) return true;
+    if (a === 172 && b >= 16 && b <= 31) return true;
+
+    return false;
+}
+
 function isAllowedOrigin(origin) {
     if (!origin) return true;
     if (allowedOrigins.has(origin)) return true;
 
     try {
         const { hostname, protocol } = new URL(origin);
+        if (!isProduction && protocol === 'http:' && isPrivateNetworkHost(hostname)) {
+            return true;
+        }
         return protocol === 'https:' && hostname.endsWith('.vercel.app');
     } catch {
         return false;
